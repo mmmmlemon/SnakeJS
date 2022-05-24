@@ -1,55 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>snek</title>
-	<link rel="stylesheet" href="animate.css">
-	<style>
-
-.game {
-  display: table;
-  margin: 0 auto;
-}
-
-.canvas {
-	display: table;
-  	margin: 0 auto;
-}
-
- .score{
-
-font-family: sans-serif;
-
-  }
-
-  .boom{
-  	animation-name: shake;
-  	animation-duration: 1s;
-  }
-
-  .flash {
-	animation-name: flash;
-  	animation-duration: 1s;
-  }
-}
-
-</style>
-
-</head>
-<body>
-	
-	<div class="game">
-	<canvas id ="canvas" width = "400" height = "400"></canvas>
-
-	<h1 class = "score" id = "score">Score </h2>
-		<audio autoplay loop>
-    <source src="sfx/music.mp3" type="audio/mpeg" />
-</audio>
-<script
-  src="https://code.jquery.com/jquery-3.2.1.min.js"
-  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-  crossorigin="anonymous"></script>
-
-		<script type="text/javascript" src="snek.js"></script>
-</body>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Змейка!</title>
+    </head>
+    <body>
+        <canvas id="canvas" width="400" height="400"></canvas>
+        <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
+        <script src="game.js"></script>
+    </body>
 </html>
