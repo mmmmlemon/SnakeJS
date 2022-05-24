@@ -1,5 +1,5 @@
-<h4>Snake Game</h4>
-<h3>JavaScript</h3>
+<h1>SnakeJS</h1>
+<h3>original game branch</h3>
 
-<p>Typical snake game. Works in browser.</p>
-<img src="./preview.gif">
+<p>Оригинальная игра, код из учебника Н. Морган "JavaScript для детей"</p>
+
