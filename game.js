@@ -7,7 +7,7 @@ var width = canvas.width;
 var height = canvas.height;
 
 // вычисляем ширину и высоту в ячейках
-var blockSize = 10;
+var blockSize = 20;
 var widthInBlocks = width / blockSize;
 var heightInBlocks = height / blockSize;
 
@@ -25,11 +25,7 @@ var drawBorder = function(){
 
 // Выводим счёт игры в левом верзнем углу
 var drawScore = function(){
-    ctx.font = "24px Arial";
-    ctx.fillStyle = "Black";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "top";
-    ctx.fillText(`Счёт: ${score}`, blockSize, blockSize);
+    $("#score").text(`Счёт: ${score}`);
 }
 
 // Отменяем действие setInterval и печатаем сообщение "Конец игры"
@@ -92,11 +88,10 @@ var Snake = function(){
     this.nextDirection = "right";
 }
 
-
 // Рисуем квадратик для каждого сегмента тела змейки
 Snake.prototype.draw = function(){
     for (var i = 0; i < this.segments.length; i++){
-        this.segments[i].drawSquare("Blue");
+        this.segments[i].drawSquare("LimeGreen");
     }
 }
 
@@ -167,14 +162,15 @@ Snake.prototype.setDirection = function(newDirection){
     this.nextDirection = newDirection;
 };
 
+
 // Задаем конструктор Apple (яблоко)
 var Apple = function(){
-    this.position = new Block(10, 10);
+    this.position = new Block(20, 20);
 };
 
 // Рисуем кружок в позиции яблока
 Apple.prototype.draw = function(){
-    this.position.drawCircle("LimeGreen");
+    this.position.drawCircle("Crimson");
 };
 
 // Перемещаем яблоко в случайную позицию

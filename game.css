@@ -1,0 +1,15 @@
+body{
+    position: relative;
+}
+
+.canvas{
+    display: table;
+  	margin: 0 auto;
+}
+
+.score{
+    display: table;
+    margin: 0 auto;
+    margin-top: 5vh;
+    font-family: 'Raleway', sans-serif;;
+}
