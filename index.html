@@ -10,8 +10,15 @@
     </head>
     <body>
         <canvas id="canvas" width="800" height="800" class="canvas"></canvas>
-        <h1 class="score" id="score">Счёт: </h1>
+        
+        <div id="main-menu" class="main-menu">
+            <h1>SnakeJS</h1>
+            <hr>
+            <h2 id="start-game-button" class="start-game-button">Начать игру</h2>
+        </div>
+
+        <h1 id="score" class="score" id="score">Счёт: </h1>
         <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
-        <script type="module" src="game.js"></script>
+        <script src="game.js"></script>
     </body>
 </html>

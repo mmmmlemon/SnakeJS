@@ -162,7 +162,6 @@ Snake.prototype.setDirection = function(newDirection){
     this.nextDirection = newDirection;
 };
 
-
 // Задаем конструктор Apple (яблоко)
 var Apple = function(){
     this.position = new Block(20, 20);
@@ -180,18 +179,29 @@ Apple.prototype.move = function(){
     this.position = new Block(randomCol, randomRow);
 };
 
-// создаём объект-змейку и обхект-яблоко
+
+// ИГРА
+
+var gamePaused = true;
+
+// создаём объект-змейку и объект-яблоко
 var snake = new Snake();
 var apple = new Apple();
 
 var intervalId = setInterval(function() {
-    ctx.clearRect(0,0, width, height);
-    drawScore();
-    snake.move();
-    snake.draw();
-    apple.draw();
-    drawBorder();
+
+    if(gamePaused === false){
+        ctx.clearRect(0,0, width, height);
+        drawScore();
+        snake.move();
+        snake.draw();
+        apple.draw();
+        drawBorder();
+    }
+    
 }, 100);
+
+// clearInterval(intervalId);
 
 var directions = {
     37: 'left',
@@ -206,3 +216,13 @@ $("body").keydown(function (event){
         snake.setDirection(newDirection);
     }
 });
+
+$("#start-game-button").click(function(){
+    gamePaused = false;
+
+    $("#main-menu").css("opacity", 0);
+    $("#main-menu").css("z-index", 0);
+
+    $("#score").css("opacity", 1);
+
+})

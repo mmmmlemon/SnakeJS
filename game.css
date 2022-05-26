@@ -12,4 +12,26 @@ body{
     margin: 0 auto;
     margin-top: 5vh;
     font-family: 'Raleway', sans-serif;;
+    opacity: 0;
+    z-index: -99999;
+    transition: opacity 0.5s ease-in-out;
+}
+
+.main-menu{
+    font-family: 'Raleway';
+    position: fixed;
+    background-color: limegreen;
+    width: 25vw;
+    text-align: center;
+    top: 25%;
+    left: 37%;
+    transition: opacity 0.1s ease-in-out;
+}
+
+.start-game-button{
+    cursor: pointer;
+}
+
+.start-game-button:hover{
+    color: white;
 }
