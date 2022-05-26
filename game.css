@@ -35,3 +35,17 @@ body{
 .start-game-button:hover{
     color: white;
 }
+
+.countdown-display{
+    pointer-events: none;
+    font-family: 'Raleway';
+    position: fixed;
+    width: 25vw;
+    font-size: 3rem;
+    font-weight: bold;
+    text-align: center;
+    top: 25%;
+    left: 37%;
+    /* transition: opacity 0.2s ease-in-out; */
+    opacity: 0;
+}

@@ -14,6 +14,10 @@ var heightInBlocks = height / blockSize;
 // устанавливаем счёт = 0
 var score = 0;
 
+// звуки
+var sfxCountdown = new Audio('./sfx/countdown.mp3');
+var sfxGo = new Audio('./sfx/go.mp3');
+
 // Рисум рамку
 var drawBorder = function(){
     ctx.fillStyle = "Gray";
@@ -201,8 +205,6 @@ var intervalId = setInterval(function() {
     
 }, 100);
 
-// clearInterval(intervalId);
-
 var directions = {
     37: 'left',
     38: 'up',
@@ -218,11 +220,37 @@ $("body").keydown(function (event){
 });
 
 $("#start-game-button").click(function(){
-    gamePaused = false;
+
+    $("#countdown-display").css("opacity", 1);
+
+    var countdown = 4;
+
+    var countdownInterval = setInterval(function(){
+        countdown--;
+
+        if(countdown > 0)
+        { 
+            $("#countdown").text(countdown); 
+            sfxCountdown.play();
+        }
+        else if(countdown === 0)
+        { 
+            $("#countdown").text("GO!");
+            sfxGo.play();
+        }
+        
+        if(countdown === -1){
+            $("#countdown-display").css("opacity", 0);
+            gamePaused = false;
+            clearInterval(countdownInterval);
+            $("#score").css("opacity", 1);
+        }
+    }, 1000);
+
 
     $("#main-menu").css("opacity", 0);
     $("#main-menu").css("z-index", 0);
 
-    $("#score").css("opacity", 1);
+
 
 })
