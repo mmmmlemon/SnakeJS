@@ -17,6 +17,7 @@ var score = 0;
 // звуки
 var sfxCountdown = new Audio('./sfx/countdown.mp3');
 var sfxGo = new Audio('./sfx/go.mp3');
+var sfxScore = new Audio('./sfx/score.mp3');
 
 // скорость движения змейки
 // таймаут в мс с которым будет обновляться элемент canvas
@@ -26,6 +27,12 @@ var canvasRerenderTimeout = 120;
 decreaseCanvasRerenderTimeout = function(){
     fivePercentOfCurrentTimeout = (canvasRerenderTimeout / 100) * 5;
     canvasRerenderTimeout -= fivePercentOfCurrentTimeout;
+}
+
+// увеличить счёт
+increaseScore = function(){
+    score++;
+    sfxScore.play();
 }
 
 // Рисум рамку
@@ -134,8 +141,8 @@ Snake.prototype.move = function(){
     this.segments.unshift(newHead);
 
     if(newHead.equal(apple.position)){  
-        score++;
         apple.move();
+        increaseScore();
         decreaseCanvasRerenderTimeout();
     } else {
         this.segments.pop();
