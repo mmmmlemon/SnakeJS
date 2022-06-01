@@ -11,13 +11,12 @@ var blockSize = 20;
 var widthInBlocks = width / blockSize;
 var heightInBlocks = height / blockSize;
 
-// устанавливаем счёт = 0
 var score = 0;
 
-// звуки
 var sfxCountdown = new Audio('./sfx/countdown.mp3');
 var sfxGo = new Audio('./sfx/go.mp3');
 var sfxScore = new Audio('./sfx/score.mp3');
+var sfxGameOver = new Audio('./sfx/gameover.mp3');
 
 // скорость движения змейки
 // таймаут в мс с которым будет обновляться элемент canvas
@@ -29,37 +28,120 @@ decreaseCanvasRerenderTimeout = function(){
     canvasRerenderTimeout -= fivePercentOfCurrentTimeout;
 }
 
-// увеличить счёт
-increaseScore = function(){
-    score++;
-    sfxScore.play();
+increaseCanvasRerenderTimeout = function(){
+    fivePercentOfCurrentTimeout = (canvasRerenderTimeout / 100) * 5;
+    canvasRerenderTimeout += fivePercentOfCurrentTimeout;
 }
 
 // Рисум рамку
-var drawBorder = function(){
-    ctx.fillStyle = "Gray";
+var drawCanvasBorder = function(){
+    ctx.fillStyle = "DarkKhaki";
     ctx.fillRect(0, 0, width, blockSize);
     ctx.fillRect(0, height - blockSize, width, blockSize);
     ctx.fillRect(0, 0, blockSize, height);
     ctx.fillRect(width - blockSize, 0, blockSize, height);
 }
 
-// Выводим счёт игры в левом верзнем углу
 var drawScore = function(){
     $("#score").text(`Счёт: ${score}`);
 }
 
-// Отменяем действие setInterval и печатаем сообщение "Конец игры"
-var gameOver = function(){
-    clearTimeout(rerenderCanvas);
-    ctx.font = "60px Courier";
-    ctx.fillStyle = "Black";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText("Конец игры", width / 2, height / 2);
+increaseScore = function(){
+    score++;
+    sfxScore.play();
 }
 
-// Рисуем окружность (используя функцию из главы 14)
+var setSnakeToInitialState = function(snake){
+    snake.segments = [
+        new Block(7, 5),
+        new Block(6, 5),
+        new Block(5, 5)
+    ];
+    snake.direction = "right";
+    snake.nextDirection = "right";
+}
+
+var setGameToInitialState = function(){
+    canvasRerenderTimeout = 120;
+    score = 0;
+}
+
+// обратный отсчёт перед началом игры
+var countdownBeforeStart = function(countdown){
+
+    countdown++;
+
+    showCountdown();
+
+    var countdownInterval = setInterval(function(){
+
+        countdown--;
+
+        if(countdown > 0){ 
+            $("#countdown").text(countdown); 
+            sfxCountdown.play();
+        }
+        else if(countdown === 0){ 
+            $("#countdown").text("GO!");
+            sfxGo.play();
+        }
+        
+        if(countdown === -1){
+            hideCountdown();
+            gamePaused = false;
+            clearInterval(countdownInterval);
+            showScore();
+        }
+    }, 1000);
+}
+
+var showStartMenu = function(){
+    if($("#start-menu").hasClass("hidden")){
+        $("#start-menu").removeClass("hidden");
+    } 
+}
+
+var hideStartMenu = function(){
+    $("#start-menu").addClass("hidden");
+}
+
+var showGameOverMenu = function(){
+    if($("#game-over-menu").hasClass("hidden")){
+        $("#game-over-menu").removeClass("hidden");
+        $("#game-over-score").text(`Ваш счёт: ${score}`);
+        sfxGameOver.play();
+    } 
+}
+
+var hideGameOverMenu = function(){
+    $("#game-over-menu").addClass("hidden");
+}
+
+var showCountdown = function(){
+    $("#countdown-display").removeClass("hidden");
+    $("#countdown").text("");
+}
+
+var hideCountdown = function(){
+    $("#countdown-display").addClass("hidden");
+    $("#countdown").text("");
+}
+
+var showScore = function(){
+    $("#score").removeClass("hidden");
+}
+
+var hideScore = function(){
+    $("#score").addClass("hidden");
+}
+
+// Отменяем действие setTimeout и выводим меню "Game Over"
+var gameOver = function(snake){
+    clearTimeout(rerenderCanvas);
+    showGameOverMenu();
+}
+
+// Рисуем окружность
 var circle = function(x, y, radius, fillCircle){
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2, false);
@@ -134,7 +216,9 @@ Snake.prototype.move = function(){
     }
 
     if(this.checkCollisions(newHead)){
+        gamePaused = true;
         gameOver();
+        showGameOverMenu();
         return ;
     }
 
@@ -203,12 +287,20 @@ Apple.prototype.move = function(){
 
 
 // ИГРА
-
+// пауза
 var gamePaused = true;
 
 // создаём объект-змейку и объект-яблоко
 var snake = new Snake();
 var apple = new Apple();
+
+// коды клавиш клавитатуры для управления змейкой
+var directions = {
+    37: 'left',
+    38: 'up',
+    39: 'right',
+    40: 'down'
+};
 
 var rerenderCanvasCallback = function(){
     if(gamePaused === false){
@@ -217,7 +309,7 @@ var rerenderCanvasCallback = function(){
         snake.move();
         snake.draw();
         apple.draw();
-        drawBorder();
+        drawCanvasBorder();
     }
 
     setTimeout(rerenderCanvasCallback, canvasRerenderTimeout);
@@ -225,54 +317,38 @@ var rerenderCanvasCallback = function(){
 
 var rerenderCanvas = setTimeout(rerenderCanvasCallback, canvasRerenderTimeout);
 
-var directions = {
-    37: 'left',
-    38: 'up',
-    39: 'right',
-    40: 'down'
-};
-
+// jQuery-обработчики для клавиатуры и элементов HTML
+// кнопки клавиатуры
 $("body").keydown(function (event){
-    var newDirection = directions[event.keyCode];
-    if(newDirection !== undefined){
-        snake.setDirection(newDirection);
-    }
+    if(gamePaused === false){
+        var newDirection = directions[event.keyCode];
+        if(newDirection !== undefined){
+            snake.setDirection(newDirection);
+        }
+    } 
 });
 
+// кнопка "Начать игру" в стартовом меню
 $("#start-game-button").click(function(){
+    hideStartMenu();
+    countdownBeforeStart(0);
+    apple.move();
+});
 
-    $("#countdown-display").css("opacity", 1);
+// кнопка "Начать заново" в меню Game Over
+$("#restart-game-button").click(function(){
+    // перезапуск игры
+    setSnakeToInitialState(snake);
+    setGameToInitialState();
+    hideGameOverMenu();
+    countdownBeforeStart(1);
+    apple.move();
+});
 
-    $("#main-menu").css("opacity", 0);
-    $("#main-menu").css("z-index", -9999);
-
-    var countdown = 4;
-
-    var countdownInterval = setInterval(function(){
-        countdown--;
-
-        if(countdown > 0)
-        { 
-            $("#countdown").text(countdown); 
-            sfxCountdown.play();
-        }
-        else if(countdown === 0)
-        { 
-            $("#countdown").text("GO!");
-            sfxGo.play();
-        }
-        
-        if(countdown === -1){
-            $("#countdown-display").css("opacity", 0);
-            gamePaused = false;
-            clearInterval(countdownInterval);
-            $("#score").css("opacity", 1);
-        }
-    }, 1000);
-
-
- 
-
-
-
-})
+// кнопка "В главное меню"
+$("#back-to-menu-button").click(function(){
+    showStartMenu();
+    hideGameOverMenu();
+    setSnakeToInitialState(snake);
+    setGameToInitialState();
+});

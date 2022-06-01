@@ -7,13 +7,16 @@ body{
   	margin: 0 auto;
 }
 
+.hidden {
+    opacity: 0;
+    z-index: -9999;
+}
+
 .score{
     display: table;
     margin: 0 auto;
     margin-top: 5vh;
     font-family: 'Raleway', sans-serif;;
-    opacity: 0;
-    z-index: -99999;
     transition: opacity 0.5s ease-in-out;
 }
 
@@ -28,12 +31,30 @@ body{
     transition: opacity 0.1s ease-in-out;
 }
 
-.start-game-button{
+.menu-button{
     cursor: pointer;
 }
 
-.start-game-button:hover{
+.menu-button:hover{
     color: white;
+}
+
+.game-menu{
+    font-family: 'Raleway';
+    position: fixed;
+    width: 25vw;
+    text-align: center;
+    top: 25%;
+    left: 37%;
+    transition: opacity 0.1s ease-in-out;
+}
+
+.game-menu.start{
+    background-color: limegreen;
+}
+
+.game-menu.gameover{
+    background-color: crimson;
 }
 
 .countdown-display{
@@ -47,5 +68,4 @@ body{
     top: 25%;
     left: 37%;
     /* transition: opacity 0.2s ease-in-out; */
-    opacity: 0;
 }

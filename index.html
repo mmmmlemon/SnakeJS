@@ -12,18 +12,28 @@
         <canvas id="canvas" width="800" height="800" class="canvas"></canvas>
         
         <!-- главное меню -->
-        <div id="main-menu" class="main-menu">
+        <div id="start-menu" class="game-menu start">
             <h1>SnakeJS</h1>
             <hr>
-            <h2 id="start-game-button" class="start-game-button">Начать игру</h2>
+            <h2 id="start-game-button" class="menu-button">Начать игру</h2>
+        </div>
+
+        <!-- меню Game Over -->
+        <div id="game-over-menu" class="game-menu gameover hidden">
+            <h1>GAME OVER</h1>
+            <hr>
+            <p id="game-over-score"></p>
+            <hr>
+            <h2 id="restart-game-button" class="menu-button">Начать заново</h2>
+            <h2 id="back-to-menu-button" class="menu-button">В главное меню</h2>
         </div>
 
         <!-- обратный отсчёт -->
-        <div id="countdown-display" class="countdown-display">
+        <div id="countdown-display" class="countdown-display hidden">
             <h1 id="countdown"></h1>
         </div>
 
-        <h1 id="score" class="score" id="score">Счёт: </h1>
+        <h1 id="score" class="score hidden">Счёт: </h1>
         <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
         <script src="game.js"></script>
     </body>
