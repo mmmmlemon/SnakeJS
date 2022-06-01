@@ -18,6 +18,16 @@ var score = 0;
 var sfxCountdown = new Audio('./sfx/countdown.mp3');
 var sfxGo = new Audio('./sfx/go.mp3');
 
+// скорость движения змейки
+// таймаут в мс с которым будет обновляться элемент canvas
+var canvasRerenderTimeout = 120;
+
+// уменьшить таймаут перерисовки canvas
+decreaseCanvasRerenderTimeout = function(){
+    fivePercentOfCurrentTimeout = (canvasRerenderTimeout / 100) * 5;
+    canvasRerenderTimeout -= fivePercentOfCurrentTimeout;
+}
+
 // Рисум рамку
 var drawBorder = function(){
     ctx.fillStyle = "Gray";
@@ -34,7 +44,7 @@ var drawScore = function(){
 
 // Отменяем действие setInterval и печатаем сообщение "Конец игры"
 var gameOver = function(){
-    clearInterval(intervalId);
+    clearTimeout(rerenderCanvas);
     ctx.font = "60px Courier";
     ctx.fillStyle = "Black";
     ctx.textAlign = "center";
@@ -126,6 +136,7 @@ Snake.prototype.move = function(){
     if(newHead.equal(apple.position)){  
         score++;
         apple.move();
+        decreaseCanvasRerenderTimeout();
     } else {
         this.segments.pop();
     }
@@ -192,8 +203,7 @@ var gamePaused = true;
 var snake = new Snake();
 var apple = new Apple();
 
-var intervalId = setInterval(function() {
-
+var rerenderCanvasCallback = function(){
     if(gamePaused === false){
         ctx.clearRect(0,0, width, height);
         drawScore();
@@ -202,8 +212,11 @@ var intervalId = setInterval(function() {
         apple.draw();
         drawBorder();
     }
-    
-}, 100);
+
+    setTimeout(rerenderCanvasCallback, canvasRerenderTimeout);
+}
+
+var rerenderCanvas = setTimeout(rerenderCanvasCallback, canvasRerenderTimeout);
 
 var directions = {
     37: 'left',
@@ -222,6 +235,9 @@ $("body").keydown(function (event){
 $("#start-game-button").click(function(){
 
     $("#countdown-display").css("opacity", 1);
+
+    $("#main-menu").css("opacity", 0);
+    $("#main-menu").css("z-index", -9999);
 
     var countdown = 4;
 
@@ -248,8 +264,7 @@ $("#start-game-button").click(function(){
     }, 1000);
 
 
-    $("#main-menu").css("opacity", 0);
-    $("#main-menu").css("z-index", 0);
+ 
 
 
 
