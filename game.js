@@ -15,7 +15,6 @@ var score = 0;
 
 var sfxCountdown = new Audio('./sfx/countdown.mp3');
 var sfxGo = new Audio('./sfx/go.mp3');
-var sfxScore = new Audio('./sfx/score.mp3');
 var sfxGameOver = new Audio('./sfx/gameover.mp3');
 
 // скорость движения змейки
@@ -33,6 +32,18 @@ increaseCanvasRerenderTimeout = function(){
     canvasRerenderTimeout += fivePercentOfCurrentTimeout;
 }
 
+var getRandomInt = function (min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var playScoreSfx = function(){
+    var randomInt = getRandomInt(1, 5);
+    var scoreSfx = new Audio(`./sfx/score${randomInt}.mp3`);
+    scoreSfx.play();
+}
+
 // Рисум рамку
 var drawCanvasBorder = function(){
     ctx.fillStyle = "DarkKhaki";
@@ -48,7 +59,7 @@ var drawScore = function(){
 
 increaseScore = function(){
     score++;
-    sfxScore.play();
+    playScoreSfx();
 }
 
 var setSnakeToInitialState = function(snake){
@@ -278,10 +289,25 @@ Apple.prototype.draw = function(){
     this.position.drawCircle("Crimson");
 };
 
+// поверяем положение яблочка чтобы оно не было около самой рамки
+Apple.prototype.modifyPosition = function(position) {
+    if(position == 1){
+        position++;
+    } else if (position == widthInBlocks - 2){
+        position--;
+    }
+    return position;
+};
+
 // Перемещаем яблоко в случайную позицию
 Apple.prototype.move = function(){
     var randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1;
     var randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
+
+    // корректируем позицию, чтобы яблочко не появилось около самой границы
+    randomCol = this.modifyPosition(randomCol);
+    randomRow = this.modifyPosition(randomRow);
+
     this.position = new Block(randomCol, randomRow);
 };
 
