@@ -17,6 +17,9 @@ var sfxCountdown = new Audio('./sfx/countdown.mp3');
 var sfxGo = new Audio('./sfx/go.mp3');
 var sfxGameOver = new Audio('./sfx/gameover.mp3');
 
+
+var snakeColors = {'r': 65, 'g': 230, 'b': 65};
+
 // скорость движения змейки
 // таймаут в мс с которым будет обновляться элемент canvas
 var canvasRerenderTimeout = 120;
@@ -57,9 +60,18 @@ var drawScore = function(){
     $("#score").text(`Счёт: ${score}`);
 }
 
-increaseScore = function(){
+var increaseScore = function(){
     score++;
     playScoreSfx();
+}
+
+var changeSnakeColor = function(){
+    snakeColors.r -= 5;
+    snakeColors.g -= 5;
+}
+
+var setSnakeColorsToInitialState = function(){
+    snakeColors = {'r': 65, 'g': 230, 'b': 65}
 }
 
 var setSnakeToInitialState = function(snake){
@@ -70,6 +82,8 @@ var setSnakeToInitialState = function(snake){
     ];
     snake.direction = "right";
     snake.nextDirection = "right";
+
+    setSnakeColorsToInitialState();
 }
 
 var setGameToInitialState = function(){
@@ -205,7 +219,7 @@ var Snake = function(){
 // Рисуем квадратик для каждого сегмента тела змейки
 Snake.prototype.draw = function(){
     for (var i = 0; i < this.segments.length; i++){
-        this.segments[i].drawSquare("LimeGreen");
+        this.segments[i].drawSquare(`rgb(${snakeColors.r}, ${snakeColors.g}, ${snakeColors.b})`);
     }
 }
 
@@ -238,6 +252,7 @@ Snake.prototype.move = function(){
     if(newHead.equal(apple.position)){  
         apple.move();
         increaseScore();
+        changeSnakeColor();
         decreaseCanvasRerenderTimeout();
     } else {
         this.segments.pop();
