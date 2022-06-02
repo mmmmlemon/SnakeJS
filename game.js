@@ -16,6 +16,8 @@ var score = 0;
 var sfxCountdown = new Audio('./sfx/countdown.mp3');
 var sfxGo = new Audio('./sfx/go.mp3');
 var sfxGameOver = new Audio('./sfx/gameover.mp3');
+var sfxAppleTimeout = new Audio('./sfx/appleTimeout.mp3');
+var sfxAppleMove = new Audio('./sfx/appleMove.mp3');
 
 
 var snakeColors = {'r': 65, 'g': 230, 'b': 65};
@@ -297,11 +299,35 @@ Snake.prototype.setDirection = function(newDirection){
 // Задаем конструктор Apple (яблоко)
 var Apple = function(){
     this.position = new Block(20, 20);
+    this.timer = 50;
+    this.appleColor = 'Crimson';
 };
+
+Apple.prototype.decreaseTimer = function(){
+    this.timer -= 1;
+}
+
+Apple.prototype.clearTimer = function(){
+    this.timer = 50;
+}
+
+Apple.prototype.checkTimer = function(){
+    
+    if(this.timer === 0){
+        this.move();
+        sfxAppleMove.play();
+    } else if (this.timer === 15 || this.timer === 10 ||this.timer === 5){
+        this.appleColor = '#f099ab';
+        sfxAppleTimeout.play();
+    } else {
+        this.appleColor = 'Crimson';
+    }
+
+}
 
 // Рисуем кружок в позиции яблока
 Apple.prototype.draw = function(){
-    this.position.drawCircle("Crimson");
+    this.position.drawCircle(this.appleColor);
 };
 
 // поверяем положение яблочка чтобы оно не было около самой рамки
@@ -316,6 +342,7 @@ Apple.prototype.modifyPosition = function(position) {
 
 // Перемещаем яблоко в случайную позицию
 Apple.prototype.move = function(){
+    this.clearTimer();
     var randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1;
     var randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
 
@@ -350,6 +377,8 @@ var rerenderCanvasCallback = function(){
         snake.move();
         snake.draw();
         apple.draw();
+        apple.decreaseTimer();
+        apple.checkTimer();
         drawCanvasBorder();
     }
 
