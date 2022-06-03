@@ -252,6 +252,7 @@ Snake.prototype.move = function(){
     this.segments.unshift(newHead);
 
     if(newHead.equal(apple.position)){  
+        apple.activateBonus(this);
         apple.move();
         increaseScore();
         changeSnakeColor();
@@ -296,6 +297,23 @@ Snake.prototype.setDirection = function(newDirection){
     this.nextDirection = newDirection;
 };
 
+Snake.prototype.getSegmentsLength = function(){
+    return this.segments.length;
+}
+
+Snake.prototype.removeSegments = function(numOfSegments){
+    if(this.segments.length >= 6){
+        numOfSegments +=1;
+        console.log(`length: ${this.segments.length}, pop: ${numOfSegments}`)
+       
+        for(var i = 0; i < numOfSegments; i++){
+            this.segments.pop();
+        } 
+    } else {
+        this.segments.pop();
+    }
+}
+
 // Задаем конструктор Apple (яблоко)
 var Apple = function(){
     this.position = new Block(20, 20);
@@ -303,27 +321,27 @@ var Apple = function(){
     this.appleTypes = {
         default: {
             color: 'Crimson',
-            name: 'default',
+            typeName: 'default',
         },
         speed: {
             color: 'Gold',
             typeName: 'speed',
-            chanceDivider: 18
+            chanceDivider: 12
         },
         size: {
             color: 'LimeGreen',
             typeName: 'size',
-            chanceDivider: 21
+            chanceDivider: 2
         },
         score: {
             color: 'Indigo',
             typeName: 'score',
-            chanceDivider: 47
+            chanceDivider: 41
         },
         black: {
             color: 'Black',
-            typeName: 'score',
-            chanceDivider: 1
+            typeName: 'black',
+            chanceDivider: 80
         }
     };
     this.appleType = this.appleTypes.default;
@@ -342,8 +360,7 @@ Apple.prototype.draw = function(color){
     this.position.drawCircle(color); 
 };
 
-
-// поверяем положение яблочка чтобы оно не было около самой рамки
+// модифицируем положение яблочка чтобы оно не было около самой рамки
 Apple.prototype.modifyPosition = function(position) {
     if(position == 1){
         position++;
@@ -357,22 +374,40 @@ Apple.prototype.switchAppleTypeRandomly = function(){
 
     var randomInt = getRandomIntInRange(999, 9999);
 
+    // не красиво, но работает как надо
+    // а вообще было бы неплохо переписать
+
+    // проверяет шансы выпадения яблочек от самого редкого (черное яблоко) у самому частому (жёлтое)
     if(randomInt % this.appleTypes.black.chanceDivider == 0) {    
         this.appleType = this.appleTypes.black;
-        console.log(this.appleType)
     } else if(randomInt % this.appleTypes.score.chanceDivider == 0) {    
         this.appleType = this.appleTypes.score;
-        console.log(this.appleType)
     } else if(randomInt % this.appleTypes.size.chanceDivider == 0) {    
         this.appleType = this.appleTypes.size;
-        console.log(this.appleType)
     } else if(randomInt % this.appleTypes.speed.chanceDivider == 0){
         this.appleType = this.appleTypes.speed;
-        console.log(this.appleType)
     } else {
         this.appleType = this.appleTypes.default;
     }
 
+}
+
+Apple.prototype.activateBonus = function(snake){
+    if(this.appleType.typeName == 'speed'){
+        this.activateSpeedBonus();
+    } else if(this.appleType.typeName == 'size'){
+        this.activateSizeBonus(snake);
+    }
+}
+
+Apple.prototype.activateSpeedBonus = function(){
+    var thirtyPercentFromCurrentTimeout = (canvasRerenderTimeout / 100) * 30;
+    canvasRerenderTimeout = canvasRerenderTimeout + thirtyPercentFromCurrentTimeout;
+}
+
+Apple.prototype.activateSizeBonus = function(snake){
+    var numOfSegments = Math.floor(snake.getSegmentsLength() / 3);
+    snake.removeSegments(numOfSegments);
 }
 
 // Перемещаем яблоко в новую случайную позицию (и меняем его тип случайным образом)
