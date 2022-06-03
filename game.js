@@ -37,14 +37,14 @@ increaseCanvasRerenderTimeout = function(){
     canvasRerenderTimeout += fivePercentOfCurrentTimeout;
 }
 
-var getRandomInt = function (min, max) {
+var getRandomIntInRange = function (min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 var playScoreSfx = function(){
-    var randomInt = getRandomInt(1, 5);
+    var randomInt = getRandomIntInRange(1, 5);
     var scoreSfx = new Audio(`./sfx/score${randomInt}.mp3`);
     scoreSfx.play();
 }
@@ -300,7 +300,33 @@ Snake.prototype.setDirection = function(newDirection){
 var Apple = function(){
     this.position = new Block(20, 20);
     this.timer = 50;
-    this.appleColor = 'Crimson';
+    this.appleTypes = {
+        default: {
+            color: 'Crimson',
+            name: 'default',
+        },
+        speed: {
+            color: 'Gold',
+            typeName: 'speed',
+            chanceDivider: 18
+        },
+        size: {
+            color: 'LimeGreen',
+            typeName: 'size',
+            chanceDivider: 21
+        },
+        score: {
+            color: 'Indigo',
+            typeName: 'score',
+            chanceDivider: 47
+        },
+        black: {
+            color: 'Black',
+            typeName: 'score',
+            chanceDivider: 1
+        }
+    };
+    this.appleType = this.appleTypes.default;
 };
 
 Apple.prototype.decreaseTimer = function(){
@@ -311,24 +337,11 @@ Apple.prototype.clearTimer = function(){
     this.timer = 50;
 }
 
-Apple.prototype.checkTimer = function(){
-    
-    if(this.timer === 0){
-        this.move();
-        sfxAppleMove.play();
-    } else if (this.timer === 15 || this.timer === 10 ||this.timer === 5){
-        this.appleColor = '#f099ab';
-        sfxAppleTimeout.play();
-    } else {
-        this.appleColor = 'Crimson';
-    }
-
-}
-
 // Рисуем кружок в позиции яблока
-Apple.prototype.draw = function(){
-    this.position.drawCircle(this.appleColor);
+Apple.prototype.draw = function(color){
+    this.position.drawCircle(color); 
 };
+
 
 // поверяем положение яблочка чтобы оно не было около самой рамки
 Apple.prototype.modifyPosition = function(position) {
@@ -340,7 +353,29 @@ Apple.prototype.modifyPosition = function(position) {
     return position;
 };
 
-// Перемещаем яблоко в случайную позицию
+Apple.prototype.switchAppleTypeRandomly = function(){
+
+    var randomInt = getRandomIntInRange(999, 9999);
+
+    if(randomInt % this.appleTypes.black.chanceDivider == 0) {    
+        this.appleType = this.appleTypes.black;
+        console.log(this.appleType)
+    } else if(randomInt % this.appleTypes.score.chanceDivider == 0) {    
+        this.appleType = this.appleTypes.score;
+        console.log(this.appleType)
+    } else if(randomInt % this.appleTypes.size.chanceDivider == 0) {    
+        this.appleType = this.appleTypes.size;
+        console.log(this.appleType)
+    } else if(randomInt % this.appleTypes.speed.chanceDivider == 0){
+        this.appleType = this.appleTypes.speed;
+        console.log(this.appleType)
+    } else {
+        this.appleType = this.appleTypes.default;
+    }
+
+}
+
+// Перемещаем яблоко в новую случайную позицию (и меняем его тип случайным образом)
 Apple.prototype.move = function(){
     this.clearTimer();
     var randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1;
@@ -351,8 +386,23 @@ Apple.prototype.move = function(){
     randomRow = this.modifyPosition(randomRow);
 
     this.position = new Block(randomCol, randomRow);
+
+    this.switchAppleTypeRandomly();
 };
 
+Apple.prototype.cycle = function(){
+
+    if(this.timer === 0){
+        this.move();
+        sfxAppleMove.play();
+    } else if(this.timer === 15 || this.timer === 10 ||this.timer === 5){
+        this.draw('Black')
+        sfxAppleTimeout.play();
+    } else {
+        this.draw(this.appleType.color);
+    }
+
+}
 
 // ИГРА
 // пауза
@@ -376,9 +426,8 @@ var rerenderCanvasCallback = function(){
         drawScore();
         snake.move();
         snake.draw();
-        apple.draw();
         apple.decreaseTimer();
-        apple.checkTimer();
+        apple.cycle();
         drawCanvasBorder();
     }
 
