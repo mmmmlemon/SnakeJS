@@ -16,12 +16,10 @@ var score = 0;
 var sfxCountdown = new Audio('./sfx/countdown.mp3');
 var sfxGo = new Audio('./sfx/go.mp3');
 var sfxGameOver = new Audio('./sfx/gameover.mp3');
-var sfxAppleTimeout = new Audio('./sfx/appleTimeout.mp3');
-var sfxAppleMove = new Audio('./sfx/appleMove.mp3');
 
 var snakeColors = {
     'r': 65,
-    'g': 230,
+    'g': 130,
     'b': 65
 };
 
@@ -52,12 +50,6 @@ var getRandomIntInRange = function(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-var playScoreSfx = function() {
-    var randomInt = getRandomIntInRange(1, 5);
-    var scoreSfx = new Audio(`./sfx/score${randomInt}.mp3`);
-    scoreSfx.play();
-}
-
 // Рисум рамку
 var drawCanvasBorder = function() {
     ctx.fillStyle = "DarkKhaki";
@@ -73,18 +65,17 @@ var drawScore = function() {
 
 var increaseScore = function() {
     score++;
-    playScoreSfx();
 }
 
 var changeSnakeColor = function() {
     snakeColors.r -= 5;
-    snakeColors.g -= 5;
+    // snakeColors.g -= 5;
 }
 
 var setSnakeColorsToInitialState = function() {
     snakeColors = {
         'r': 65,
-        'g': 230,
+        'g': 130,
         'b': 65
     }
 }
@@ -233,7 +224,7 @@ var Snake = function() {
 // Рисуем квадратик для каждого сегмента тела змейки
 Snake.prototype.draw = function() {
     for (var i = 0; i < this.segments.length; i++) {
-        this.segments[i].drawSquare(`rgb(${snakeColors.r}, ${snakeColors.g}, ${snakeColors.b})`);
+        this.segments[i].drawSquare(`rgb(${snakeColors.r}, ${canvasRerenderTimeout+snakeColors.g}, ${snakeColors.b})`);
     }
 }
 
@@ -265,6 +256,7 @@ Snake.prototype.move = function() {
 
     if (newHead.equal(apple.position)) {
         apple.activateBonus(this);
+        apple.playScoreSfx();
         apple.move();
         increaseScore();
         changeSnakeColor();
@@ -328,7 +320,7 @@ Snake.prototype.removeSegments = function(numOfSegments) {
 // Задаем конструктор Apple (яблоко)
 var Apple = function() {
     this.position = new Block(20, 20);
-    this.timer = 50;
+    this.timer = 500;
     this.appleTypes = {
         default: {
             color: 'Crimson',
@@ -337,26 +329,55 @@ var Apple = function() {
         speed: {
             color: 'Gold',
             typeName: 'speed',
-            chanceDivider: 8
+            chanceDivider: 8,
+            scoreToGenerate: 15,
         },
         size: {
             color: 'LimeGreen',
             typeName: 'size',
-            chanceDivider: 12
+            chanceDivider: 10,
+            scoreToGenerate: 15,
         },
         score: {
             color: 'Indigo',
             typeName: 'score',
-            chanceDivider: 22
+            chanceDivider: 16,
+            scoreToGenerate: 25,
         },
         black: {
             color: 'Black',
             typeName: 'black',
-            chanceDivider: 32
+            chanceDivider: 22,
+            scoreToGenerate: 15,
+            gameSpeedToGenerate: 50
         }
     };
     this.appleType = this.appleTypes.default;
+    this.sfx = {
+        appleTimeout: new Audio('./sfx/appleTimeout.mp3'),
+        appleMove: new Audio('./sfx/appleMove.mp3'),
+        score1: new Audio('./sfx/score1.mp3'),
+        score2: new Audio('./sfx/score2.mp3'),
+        score3: new Audio('./sfx/score3.mp3'),
+        score4: new Audio('./sfx/score4.mp3'),
+        score5: new Audio('./sfx/score5.mp3'),
+        size: new Audio('./sfx/size.mp3'),
+        speed: new Audio('./sfx/speed.mp3'),
+        score: new Audio('./sfx/score.mp3'),
+        black: new Audio('./sfx/black.mp3')
+    }
 };
+
+Apple.prototype.playScoreSfx = function() {
+        var randomInt = getRandomIntInRange(1, 5);
+        var key = `score${randomInt}`;
+        this.sfx[key].play();
+
+        if(this.appleType.typeName != 'default'){
+            this.sfx[this.appleType.typeName].play();
+        }
+ 
+}
 
 Apple.prototype.decreaseTimer = function() {
     this.timer -= 1;
@@ -388,13 +409,13 @@ Apple.prototype.switchAppleTypeRandomly = function() {
     // не красиво, но работает как надо
     // а вообще было бы неплохо переписать
     // проверяет шансы выпадения яблочек от самого редкого (черное яблоко) у самому частому (жёлтое)
-    if (randomInt % this.appleTypes.black.chanceDivider == 0 && score > 15 && canvasRerenderTimeout < 50) {
+    if (randomInt % this.appleTypes.black.chanceDivider == 0 && score > this.appleTypes.black.scoreToGenerate && canvasRerenderTimeout < this.appleTypes.black.gameSpeedToGenerate) {
         this.appleType = this.appleTypes.black;
-    } else if (randomInt % this.appleTypes.score.chanceDivider == 0 && score > 15) {
+    } else if (randomInt % this.appleTypes.score.chanceDivider == 0 && score > this.appleTypes.score.scoreToGenerate) {
         this.appleType = this.appleTypes.score;
-    } else if (randomInt % this.appleTypes.size.chanceDivider == 0 && score > 15) {
+    } else if (randomInt % this.appleTypes.size.chanceDivider == 0 && score > this.appleTypes.size.scoreToGenerate) {
         this.appleType = this.appleTypes.size;
-    } else if (randomInt % this.appleTypes.speed.chanceDivider == 0 && score > 15) {
+    } else if (randomInt % this.appleTypes.speed.chanceDivider == 0 && score > this.appleTypes.speed.scoreToGenerate) {
         this.appleType = this.appleTypes.speed;
     } else {
         this.appleType = this.appleTypes.default;
@@ -433,18 +454,22 @@ Apple.prototype.activateBlackBonus = function(snake) {
 
     var currentGameSpeed = canvasRerenderTimeout;
     var originalGameSpeed = 120;
-    var step = (originalGameSpeed - currentGameSpeed) / 8;
+    var speedStep = (originalGameSpeed - currentGameSpeed) / 8;
 
-    while (snake.segments.length > 3) {
-        snake.segments.pop();
-    }
+    var currentSnakeLength = snake.segments.length;
+    var snakeSizeStep = Math.floor((currentSnakeLength - 3) / 8);
 
     var timeoutInMs = 8000;
 
     var timeout = setInterval(function() {
         timeoutInMs -= 1000;
-        canvasRerenderTimeout += step;
+        canvasRerenderTimeout += speedStep;
 
+        if(snake.segments.length > 3){
+            for(var i = 0; i < snakeSizeStep; i++){
+                snake.segments.pop();
+            }
+        }
         if (timeoutInMs == 0) {
             clearInterval(timeout);
         }
@@ -470,14 +495,13 @@ Apple.prototype.cycle = function() {
 
     if (this.timer === 0) {
         this.move();
-        sfxAppleMove.play();
+        apple.sfx.appleMove.play();
     } else if (this.timer === 15 || this.timer === 10 || this.timer === 5) {
         this.draw('Black')
-        sfxAppleTimeout.play();
+        apple.sfx.appleTimeout.play();
     } else {
         this.draw(this.appleType.color);
     }
-
 }
 
 // ИГРА
