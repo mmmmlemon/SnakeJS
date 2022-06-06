@@ -27,14 +27,18 @@ var snakeColors = {'r': 65, 'g': 230, 'b': 65};
 var canvasRerenderTimeout = 120;
 
 // уменьшить таймаут перерисовки canvas
-decreaseCanvasRerenderTimeout = function(){
-    fivePercentOfCurrentTimeout = (canvasRerenderTimeout / 100) * 5;
-    canvasRerenderTimeout -= fivePercentOfCurrentTimeout;
+decreaseCanvasRerenderTimeoutByPercent = function(percent){
+    percentOfCurrentTimeout = (canvasRerenderTimeout / 100) * percent;
+    canvasRerenderTimeout -= percentOfCurrentTimeout;
 }
 
-increaseCanvasRerenderTimeout = function(){
-    fivePercentOfCurrentTimeout = (canvasRerenderTimeout / 100) * 5;
-    canvasRerenderTimeout += fivePercentOfCurrentTimeout;
+increaseCanvasRerenderTimeoutByPercent = function(percent){
+    percentOfCurrentTimeout = (canvasRerenderTimeout / 100) * percent;
+    canvasRerenderTimeout += percentOfCurrentTimeout;
+}
+
+increaseCanvasRerenderTimoutByValue = function (value){
+    canvasRerenderTimeout += value;
 }
 
 var getRandomIntInRange = function (min, max) {
@@ -256,7 +260,7 @@ Snake.prototype.move = function(){
         apple.move();
         increaseScore();
         changeSnakeColor();
-        decreaseCanvasRerenderTimeout();
+        decreaseCanvasRerenderTimeoutByPercent(7);
     } else {
         this.segments.pop();
     }
@@ -341,7 +345,7 @@ var Apple = function(){
         black: {
             color: 'Black',
             typeName: 'black',
-            chanceDivider: 80
+            chanceDivider: 32
         }
     };
     this.appleType = this.appleTypes.default;
@@ -376,9 +380,8 @@ Apple.prototype.switchAppleTypeRandomly = function(){
 
     // не красиво, но работает как надо
     // а вообще было бы неплохо переписать
-
     // проверяет шансы выпадения яблочек от самого редкого (черное яблоко) у самому частому (жёлтое)
-    if(randomInt % this.appleTypes.black.chanceDivider == 0  && score > 25) {    
+    if(randomInt % this.appleTypes.black.chanceDivider == 0 && score > 15 && canvasRerenderTimeout < 50) {    
         this.appleType = this.appleTypes.black;
     } else if(randomInt % this.appleTypes.score.chanceDivider == 0 && score > 15) {    
         this.appleType = this.appleTypes.score;
@@ -399,6 +402,8 @@ Apple.prototype.activateBonus = function(snake){
         this.activateSizeBonus(snake);
     } else if (this.appleType.typeName == 'score'){
         this.activateScoreBonus();
+    } else if (this.appleType.typeName == 'black'){
+        this.activateBlackBonus(snake);
     }
 }
 
@@ -415,6 +420,30 @@ Apple.prototype.activateSizeBonus = function(snake){
 Apple.prototype.activateScoreBonus = function(){
     fifteenPercentOfCurrentScore = Math.floor((score / 100) * 15);
     score += fifteenPercentOfCurrentScore;
+}
+
+Apple.prototype.activateBlackBonus = function(snake){
+
+    decreaseCanvasRerenderTimeoutByPercent(20);
+
+    var currentGameSpeed = canvasRerenderTimeout;
+    var originalGameSpeed = 120;
+    var step = (originalGameSpeed - currentGameSpeed) / 8;
+
+    while(snake.segments.length > 3){
+        snake.segments.pop();
+    }
+
+    var timeoutInMs = 8000;
+
+    var timeout = setInterval(function() {
+        timeoutInMs -= 1000;
+        canvasRerenderTimeout += step;
+
+        if(timeoutInMs == 0){
+            clearInterval(timeout);
+        }
+    }, 1000);
 }
 
 // Перемещаем яблоко в новую случайную позицию (и меняем его тип случайным образом)
