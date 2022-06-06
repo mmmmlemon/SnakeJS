@@ -19,42 +19,47 @@ var sfxGameOver = new Audio('./sfx/gameover.mp3');
 var sfxAppleTimeout = new Audio('./sfx/appleTimeout.mp3');
 var sfxAppleMove = new Audio('./sfx/appleMove.mp3');
 
-
-var snakeColors = {'r': 65, 'g': 230, 'b': 65};
+var snakeColors = {
+    'r': 65,
+    'g': 230,
+    'b': 65
+};
 
 // скорость движения змейки
 // таймаут в мс с которым будет обновляться элемент canvas
 var canvasRerenderTimeout = 120;
 
+valueOfPercentFromNumber = function(number, percent) {
+    return Math.floor((number / 100) * percent);
+}
+
 // уменьшить таймаут перерисовки canvas
-decreaseCanvasRerenderTimeoutByPercent = function(percent){
-    percentOfCurrentTimeout = (canvasRerenderTimeout / 100) * percent;
-    canvasRerenderTimeout -= percentOfCurrentTimeout;
+decreaseCanvasRerenderTimeoutByPercent = function(percent) {
+    canvasRerenderTimeout -= valueOfPercentFromNumber(canvasRerenderTimeout, percent);
 }
 
-increaseCanvasRerenderTimeoutByPercent = function(percent){
-    percentOfCurrentTimeout = (canvasRerenderTimeout / 100) * percent;
-    canvasRerenderTimeout += percentOfCurrentTimeout;
+increaseCanvasRerenderTimeoutByPercent = function(percent) {
+    canvasRerenderTimeout += valueOfPercentFromNumber(canvasRerenderTimeout, percent);
 }
 
-increaseCanvasRerenderTimoutByValue = function (value){
+increaseCanvasRerenderTimoutByValue = function(value) {
     canvasRerenderTimeout += value;
 }
 
-var getRandomIntInRange = function (min, max) {
+var getRandomIntInRange = function(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-var playScoreSfx = function(){
+var playScoreSfx = function() {
     var randomInt = getRandomIntInRange(1, 5);
     var scoreSfx = new Audio(`./sfx/score${randomInt}.mp3`);
     scoreSfx.play();
 }
 
 // Рисум рамку
-var drawCanvasBorder = function(){
+var drawCanvasBorder = function() {
     ctx.fillStyle = "DarkKhaki";
     ctx.fillRect(0, 0, width, blockSize);
     ctx.fillRect(0, height - blockSize, width, blockSize);
@@ -62,25 +67,29 @@ var drawCanvasBorder = function(){
     ctx.fillRect(width - blockSize, 0, blockSize, height);
 }
 
-var drawScore = function(){
+var drawScore = function() {
     $("#score").text(`Счёт: ${score}`);
 }
 
-var increaseScore = function(){
+var increaseScore = function() {
     score++;
     playScoreSfx();
 }
 
-var changeSnakeColor = function(){
+var changeSnakeColor = function() {
     snakeColors.r -= 5;
     snakeColors.g -= 5;
 }
 
-var setSnakeColorsToInitialState = function(){
-    snakeColors = {'r': 65, 'g': 230, 'b': 65}
+var setSnakeColorsToInitialState = function() {
+    snakeColors = {
+        'r': 65,
+        'g': 230,
+        'b': 65
+    }
 }
 
-var setSnakeToInitialState = function(snake){
+var setSnakeToInitialState = function(snake) {
     snake.segments = [
         new Block(7, 5),
         new Block(6, 5),
@@ -92,32 +101,31 @@ var setSnakeToInitialState = function(snake){
     setSnakeColorsToInitialState();
 }
 
-var setGameToInitialState = function(){
+var setGameToInitialState = function() {
     canvasRerenderTimeout = 120;
     score = 0;
 }
 
 // обратный отсчёт перед началом игры
-var countdownBeforeStart = function(countdown){
+var countdownBeforeStart = function(countdown) {
 
     countdown++;
 
     showCountdown();
 
-    var countdownInterval = setInterval(function(){
+    var countdownInterval = setInterval(function() {
 
         countdown--;
 
-        if(countdown > 0){ 
-            $("#countdown").text(countdown); 
+        if (countdown > 0) {
+            $("#countdown").text(countdown);
             sfxCountdown.play();
-        }
-        else if(countdown === 0){ 
+        } else if (countdown === 0) {
             $("#countdown").text("GO!");
             sfxGo.play();
         }
-        
-        if(countdown === -1){
+
+        if (countdown === -1) {
             hideCountdown();
             gamePaused = false;
             clearInterval(countdownInterval);
@@ -126,57 +134,57 @@ var countdownBeforeStart = function(countdown){
     }, 1000);
 }
 
-var showStartMenu = function(){
-    if($("#start-menu").hasClass("hidden")){
+var showStartMenu = function() {
+    if ($("#start-menu").hasClass("hidden")) {
         $("#start-menu").removeClass("hidden");
-    } 
+    }
 }
 
-var hideStartMenu = function(){
+var hideStartMenu = function() {
     $("#start-menu").addClass("hidden");
 }
 
-var showGameOverMenu = function(){
-    if($("#game-over-menu").hasClass("hidden")){
+var showGameOverMenu = function() {
+    if ($("#game-over-menu").hasClass("hidden")) {
         $("#game-over-menu").removeClass("hidden");
         $("#game-over-score").text(`Ваш счёт: ${score}`);
         sfxGameOver.play();
-    } 
+    }
 }
 
-var hideGameOverMenu = function(){
+var hideGameOverMenu = function() {
     $("#game-over-menu").addClass("hidden");
 }
 
-var showCountdown = function(){
+var showCountdown = function() {
     $("#countdown-display").removeClass("hidden");
     $("#countdown").text("");
 }
 
-var hideCountdown = function(){
+var hideCountdown = function() {
     $("#countdown-display").addClass("hidden");
     $("#countdown").text("");
 }
 
-var showScore = function(){
+var showScore = function() {
     $("#score").removeClass("hidden");
 }
 
-var hideScore = function(){
+var hideScore = function() {
     $("#score").addClass("hidden");
 }
 
 // Отменяем действие setTimeout и выводим меню "Game Over"
-var gameOver = function(snake){
+var gameOver = function(snake) {
     clearTimeout(rerenderCanvas);
     showGameOverMenu();
 }
 
 // Рисуем окружность
-var circle = function(x, y, radius, fillCircle){
+var circle = function(x, y, radius, fillCircle) {
     ctx.beginPath();
     ctx.arc(x, y, radius, 0, Math.PI * 2, false);
-    if(fillCircle){
+    if (fillCircle) {
         ctx.fill();
     } else {
         ctx.stroke();
@@ -184,13 +192,13 @@ var circle = function(x, y, radius, fillCircle){
 }
 
 // Задаем конструктор Block (ячейка)
-var Block = function (col, row){
+var Block = function(col, row) {
     this.col = col;
     this.row = row;
 }
 
 // Рисуем квадрат в позиции ячейки
-Block.prototype.drawSquare = function (color){
+Block.prototype.drawSquare = function(color) {
     var x = this.col * blockSize;
     var y = this.row * blockSize;
     ctx.fillStyle = color;
@@ -198,7 +206,7 @@ Block.prototype.drawSquare = function (color){
 }
 
 // Рисуем круг в позиции ячейки
-Block.prototype.drawCircle = function(color){
+Block.prototype.drawCircle = function(color) {
     var centerX = this.col * blockSize + blockSize / 2;
     var centerY = this.row * blockSize + blockSize / 2;
     ctx.fillStyle = color;
@@ -206,12 +214,12 @@ Block.prototype.drawCircle = function(color){
 }
 
 // Проверяем находится ли эта ячейка в той же позиции что и ячейка otherBlock
-Block.prototype.equal = function(otherBlock){
+Block.prototype.equal = function(otherBlock) {
     return this.col === otherBlock.col && this.row === otherBlock.row;
 }
 
 // Задаем конструктор Snake (змейка)
-var Snake = function(){
+var Snake = function() {
     this.segments = [
         new Block(7, 5),
         new Block(6, 5),
@@ -223,39 +231,39 @@ var Snake = function(){
 }
 
 // Рисуем квадратик для каждого сегмента тела змейки
-Snake.prototype.draw = function(){
-    for (var i = 0; i < this.segments.length; i++){
+Snake.prototype.draw = function() {
+    for (var i = 0; i < this.segments.length; i++) {
         this.segments[i].drawSquare(`rgb(${snakeColors.r}, ${snakeColors.g}, ${snakeColors.b})`);
     }
 }
 
 // Создаём новую голову и добавляем её к началу змейки, чтобы передвинуть змейку в текущем направлении
-Snake.prototype.move = function(){
+Snake.prototype.move = function() {
     var head = this.segments[0];
     var newHead;
 
     this.direction = this.nextDirection;
 
-    if(this.direction === "right"){
-        newHead = new Block(head.col +1, head.row);
-    } else if(this.direction === "down"){
+    if (this.direction === "right") {
+        newHead = new Block(head.col + 1, head.row);
+    } else if (this.direction === "down") {
         newHead = new Block(head.col, head.row + 1);
-    } else if(this.direction === "left"){
+    } else if (this.direction === "left") {
         newHead = new Block(head.col - 1, head.row);
-    } else if (this.direction === "up"){
+    } else if (this.direction === "up") {
         newHead = new Block(head.col, head.row - 1);
     }
 
-    if(this.checkCollisions(newHead)){
+    if (this.checkCollisions(newHead)) {
         gamePaused = true;
         gameOver();
         showGameOverMenu();
-        return ;
+        return;
     }
 
     this.segments.unshift(newHead);
 
-    if(newHead.equal(apple.position)){  
+    if (newHead.equal(apple.position)) {
         apple.activateBonus(this);
         apple.move();
         increaseScore();
@@ -267,18 +275,18 @@ Snake.prototype.move = function(){
 }
 
 // Проверяем, не столкнулась ли змейка со стеной или собственным телом
-Snake.prototype.checkCollisions = function(head){
+Snake.prototype.checkCollisions = function(head) {
     var leftCollision = (head.col === 0);
     var topCollision = (head.row === 0);
-    var rightCollision = (head.col === widthInBlocks -1);
+    var rightCollision = (head.col === widthInBlocks - 1);
     var bottomCollision = (head.row === heightInBlocks - 1);
 
     var wallCollision = leftCollision || topCollision || rightCollision || bottomCollision;
 
     var selfCollision = false;
 
-    for(var i = 0; i < this.segments.length; i++){
-        if(head.equal(this.segments[i])){
+    for (var i = 0; i < this.segments.length; i++) {
+        if (head.equal(this.segments[i])) {
             selfCollision = true;
         }
     }
@@ -287,39 +295,38 @@ Snake.prototype.checkCollisions = function(head){
 }
 
 // Задаем следующее направление движения змейки на основе нажатой клавиши
-Snake.prototype.setDirection = function(newDirection){
-    if(this.direction === "up" && newDirection === "down"){
+Snake.prototype.setDirection = function(newDirection) {
+    if (this.direction === "up" && newDirection === "down") {
         return;
-    } else if(this.direction === "right" && newDirection === "left"){
+    } else if (this.direction === "right" && newDirection === "left") {
         return;
-    } else if(this.direction === "down" && newDirection === "up"){
+    } else if (this.direction === "down" && newDirection === "up") {
         return;
-    } else if(this.direction === "left" && newDirection === "right"){
+    } else if (this.direction === "left" && newDirection === "right") {
         return;
     }
 
     this.nextDirection = newDirection;
 };
 
-Snake.prototype.getSegmentsLength = function(){
+Snake.prototype.getSegmentsLength = function() {
     return this.segments.length;
 }
 
-Snake.prototype.removeSegments = function(numOfSegments){
-    if(this.segments.length >= 6){
-        numOfSegments +=1;
-        console.log(`length: ${this.segments.length}, pop: ${numOfSegments}`)
-       
-        for(var i = 0; i < numOfSegments; i++){
+Snake.prototype.removeSegments = function(numOfSegments) {
+    if (this.segments.length >= 6) {
+        numOfSegments += 1;
+
+        for (var i = 0; i < numOfSegments; i++) {
             this.segments.pop();
-        } 
+        }
     } else {
         this.segments.pop();
     }
 }
 
 // Задаем конструктор Apple (яблоко)
-var Apple = function(){
+var Apple = function() {
     this.position = new Block(20, 20);
     this.timer = 50;
     this.appleTypes = {
@@ -351,43 +358,43 @@ var Apple = function(){
     this.appleType = this.appleTypes.default;
 };
 
-Apple.prototype.decreaseTimer = function(){
+Apple.prototype.decreaseTimer = function() {
     this.timer -= 1;
 }
 
-Apple.prototype.clearTimer = function(){
+Apple.prototype.clearTimer = function() {
     this.timer = 50;
 }
 
 // Рисуем кружок в позиции яблока
-Apple.prototype.draw = function(color){
-    this.position.drawCircle(color); 
+Apple.prototype.draw = function(color) {
+    this.position.drawCircle(color);
 };
 
 // модифицируем положение яблочка чтобы оно не было около самой рамки
 Apple.prototype.modifyPosition = function(position) {
-    if(position == 1){
+    if (position == 1) {
         position++;
-    } else if (position == widthInBlocks - 2){
+    } else if (position == widthInBlocks - 2) {
         position--;
     }
     return position;
 };
 
-Apple.prototype.switchAppleTypeRandomly = function(){
+Apple.prototype.switchAppleTypeRandomly = function() {
 
     var randomInt = getRandomIntInRange(999, 9999);
 
     // не красиво, но работает как надо
     // а вообще было бы неплохо переписать
     // проверяет шансы выпадения яблочек от самого редкого (черное яблоко) у самому частому (жёлтое)
-    if(randomInt % this.appleTypes.black.chanceDivider == 0 && score > 15 && canvasRerenderTimeout < 50) {    
+    if (randomInt % this.appleTypes.black.chanceDivider == 0 && score > 15 && canvasRerenderTimeout < 50) {
         this.appleType = this.appleTypes.black;
-    } else if(randomInt % this.appleTypes.score.chanceDivider == 0 && score > 15) {    
+    } else if (randomInt % this.appleTypes.score.chanceDivider == 0 && score > 15) {
         this.appleType = this.appleTypes.score;
-    } else if(randomInt % this.appleTypes.size.chanceDivider == 0  && score > 15) {    
+    } else if (randomInt % this.appleTypes.size.chanceDivider == 0 && score > 15) {
         this.appleType = this.appleTypes.size;
-    } else if(randomInt % this.appleTypes.speed.chanceDivider == 0 && score > 15){
+    } else if (randomInt % this.appleTypes.speed.chanceDivider == 0 && score > 15) {
         this.appleType = this.appleTypes.speed;
     } else {
         this.appleType = this.appleTypes.default;
@@ -395,34 +402,32 @@ Apple.prototype.switchAppleTypeRandomly = function(){
 
 }
 
-Apple.prototype.activateBonus = function(snake){
-    if(this.appleType.typeName == 'speed'){
+Apple.prototype.activateBonus = function(snake) {
+    if (this.appleType.typeName == 'speed') {
         this.activateSpeedBonus();
-    } else if(this.appleType.typeName == 'size'){
+    } else if (this.appleType.typeName == 'size') {
         this.activateSizeBonus(snake);
-    } else if (this.appleType.typeName == 'score'){
+    } else if (this.appleType.typeName == 'score') {
         this.activateScoreBonus();
-    } else if (this.appleType.typeName == 'black'){
+    } else if (this.appleType.typeName == 'black') {
         this.activateBlackBonus(snake);
     }
 }
 
-Apple.prototype.activateSpeedBonus = function(){
-    var thirtyPercentFromCurrentTimeout = (canvasRerenderTimeout / 100) * 30;
-    canvasRerenderTimeout = canvasRerenderTimeout + thirtyPercentFromCurrentTimeout;
+Apple.prototype.activateSpeedBonus = function() {
+    canvasRerenderTimeout = canvasRerenderTimeout + valueOfPercentFromNumber(canvasRerenderTimeout, 30);
 }
 
-Apple.prototype.activateSizeBonus = function(snake){
+Apple.prototype.activateSizeBonus = function(snake) {
     var numOfSegments = Math.floor(snake.getSegmentsLength() / 3);
     snake.removeSegments(numOfSegments);
 }
 
-Apple.prototype.activateScoreBonus = function(){
-    fifteenPercentOfCurrentScore = Math.floor((score / 100) * 15);
-    score += fifteenPercentOfCurrentScore;
+Apple.prototype.activateScoreBonus = function() {
+    score += valueOfPercentFromNumber(score, 15);
 }
 
-Apple.prototype.activateBlackBonus = function(snake){
+Apple.prototype.activateBlackBonus = function(snake) {
 
     decreaseCanvasRerenderTimeoutByPercent(20);
 
@@ -430,7 +435,7 @@ Apple.prototype.activateBlackBonus = function(snake){
     var originalGameSpeed = 120;
     var step = (originalGameSpeed - currentGameSpeed) / 8;
 
-    while(snake.segments.length > 3){
+    while (snake.segments.length > 3) {
         snake.segments.pop();
     }
 
@@ -440,14 +445,14 @@ Apple.prototype.activateBlackBonus = function(snake){
         timeoutInMs -= 1000;
         canvasRerenderTimeout += step;
 
-        if(timeoutInMs == 0){
+        if (timeoutInMs == 0) {
             clearInterval(timeout);
         }
     }, 1000);
 }
 
 // Перемещаем яблоко в новую случайную позицию (и меняем его тип случайным образом)
-Apple.prototype.move = function(){
+Apple.prototype.move = function() {
     this.clearTimer();
     var randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1;
     var randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
@@ -461,12 +466,12 @@ Apple.prototype.move = function(){
     this.switchAppleTypeRandomly();
 };
 
-Apple.prototype.cycle = function(){
+Apple.prototype.cycle = function() {
 
-    if(this.timer === 0){
+    if (this.timer === 0) {
         this.move();
         sfxAppleMove.play();
-    } else if(this.timer === 15 || this.timer === 10 ||this.timer === 5){
+    } else if (this.timer === 15 || this.timer === 10 || this.timer === 5) {
         this.draw('Black')
         sfxAppleTimeout.play();
     } else {
@@ -491,9 +496,9 @@ var directions = {
     40: 'down'
 };
 
-var rerenderCanvasCallback = function(){
-    if(gamePaused === false){
-        ctx.clearRect(0,0, width, height);
+var rerenderCanvasCallback = function() {
+    if (gamePaused === false) {
+        ctx.clearRect(0, 0, width, height);
         drawScore();
         snake.move();
         snake.draw();
@@ -509,24 +514,24 @@ var rerenderCanvas = setTimeout(rerenderCanvasCallback, canvasRerenderTimeout);
 
 // jQuery-обработчики для клавиатуры и элементов HTML
 // кнопки клавиатуры
-$("body").keydown(function (event){
-    if(gamePaused === false){
+$("body").keydown(function(event) {
+    if (gamePaused === false) {
         var newDirection = directions[event.keyCode];
-        if(newDirection !== undefined){
+        if (newDirection !== undefined) {
             snake.setDirection(newDirection);
         }
-    } 
+    }
 });
 
 // кнопка "Начать игру" в стартовом меню
-$("#start-game-button").click(function(){
+$("#start-game-button").click(function() {
     hideStartMenu();
     countdownBeforeStart(0);
     apple.move();
 });
 
 // кнопка "Начать заново" в меню Game Over
-$("#restart-game-button").click(function(){
+$("#restart-game-button").click(function() {
     // перезапуск игры
     setSnakeToInitialState(snake);
     setGameToInitialState();
@@ -536,7 +541,7 @@ $("#restart-game-button").click(function(){
 });
 
 // кнопка "В главное меню"
-$("#back-to-menu-button").click(function(){
+$("#back-to-menu-button").click(function() {
     showStartMenu();
     hideGameOverMenu();
     setSnakeToInitialState(snake);
