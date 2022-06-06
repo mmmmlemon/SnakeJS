@@ -326,17 +326,17 @@ var Apple = function(){
         speed: {
             color: 'Gold',
             typeName: 'speed',
-            chanceDivider: 12
+            chanceDivider: 8
         },
         size: {
             color: 'LimeGreen',
             typeName: 'size',
-            chanceDivider: 2
+            chanceDivider: 12
         },
         score: {
             color: 'Indigo',
             typeName: 'score',
-            chanceDivider: 41
+            chanceDivider: 22
         },
         black: {
             color: 'Black',
@@ -378,13 +378,13 @@ Apple.prototype.switchAppleTypeRandomly = function(){
     // а вообще было бы неплохо переписать
 
     // проверяет шансы выпадения яблочек от самого редкого (черное яблоко) у самому частому (жёлтое)
-    if(randomInt % this.appleTypes.black.chanceDivider == 0) {    
+    if(randomInt % this.appleTypes.black.chanceDivider == 0  && score > 25) {    
         this.appleType = this.appleTypes.black;
-    } else if(randomInt % this.appleTypes.score.chanceDivider == 0) {    
+    } else if(randomInt % this.appleTypes.score.chanceDivider == 0 && score > 15) {    
         this.appleType = this.appleTypes.score;
-    } else if(randomInt % this.appleTypes.size.chanceDivider == 0) {    
+    } else if(randomInt % this.appleTypes.size.chanceDivider == 0  && score > 15) {    
         this.appleType = this.appleTypes.size;
-    } else if(randomInt % this.appleTypes.speed.chanceDivider == 0){
+    } else if(randomInt % this.appleTypes.speed.chanceDivider == 0 && score > 15){
         this.appleType = this.appleTypes.speed;
     } else {
         this.appleType = this.appleTypes.default;
@@ -397,6 +397,8 @@ Apple.prototype.activateBonus = function(snake){
         this.activateSpeedBonus();
     } else if(this.appleType.typeName == 'size'){
         this.activateSizeBonus(snake);
+    } else if (this.appleType.typeName == 'score'){
+        this.activateScoreBonus();
     }
 }
 
@@ -408,6 +410,11 @@ Apple.prototype.activateSpeedBonus = function(){
 Apple.prototype.activateSizeBonus = function(snake){
     var numOfSegments = Math.floor(snake.getSegmentsLength() / 3);
     snake.removeSegments(numOfSegments);
+}
+
+Apple.prototype.activateScoreBonus = function(){
+    fifteenPercentOfCurrentScore = Math.floor((score / 100) * 15);
+    score += fifteenPercentOfCurrentScore;
 }
 
 // Перемещаем яблоко в новую случайную позицию (и меняем его тип случайным образом)
