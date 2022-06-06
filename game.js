@@ -550,7 +550,7 @@ $("body").keydown(function(event) {
 // кнопка "Начать игру" в стартовом меню
 $("#start-game-button").click(function() {
     hideStartMenu();
-    countdownBeforeStart(0);
+    countdownBeforeStart(3);
     apple.move();
 });
 
@@ -560,7 +560,7 @@ $("#restart-game-button").click(function() {
     setSnakeToInitialState(snake);
     setGameToInitialState();
     hideGameOverMenu();
-    countdownBeforeStart(1);
+    countdownBeforeStart(3);
     apple.move();
 });
 

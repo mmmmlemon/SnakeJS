@@ -47,6 +47,11 @@ body{
     top: 25%;
     left: 37%;
     transition: opacity 0.1s ease-in-out;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.game-menu h1{
+    pointer-events: none;
 }
 
 .game-menu.start{
@@ -67,5 +72,6 @@ body{
     text-align: center;
     top: 25%;
     left: 37%;
+    font-family: 'Press Start 2P', cursive;
     /* transition: opacity 0.2s ease-in-out; */
 }
