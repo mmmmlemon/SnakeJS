@@ -23,7 +23,7 @@ body{
 .main-menu{
     font-family: 'Raleway';
     position: fixed;
-    background-color: limegreen;
+    background-image: linear-gradient(to top, #58c015, #6dcb14, #80d613, #94e012, #a8eb12);
     width: 25vw;
     text-align: center;
     top: 25%;
@@ -48,18 +48,46 @@ body{
     left: 37%;
     transition: opacity 0.1s ease-in-out;
     font-family: 'Press Start 2P', cursive;
+    padding: 2% 0% 2% 0%;
 }
 
-.game-menu h1{
+.game-menu.start h1{
     pointer-events: none;
+    color: white;
+    font-size: 2.5rem;
+    text-shadow: 4px 5px 0px #000000, -4px -3px 0px #15990C;
 }
+
+.game-menu.start p{
+    padding: 1px;
+}
+
+.game-menu.gameover h1{
+    pointer-events: none;
+    color: white;
+    font-size: 2.5rem;
+    text-shadow: 4px 5px 0px #000000, -4px -3px 0px #ff0000;
+}
+
+.game-menu.gameover h2{
+    color: white;
+}
+
+.game-menu.gameover p{
+    color: white;
+}
+
+.game-menu.gameover h2:hover{
+    color: #9e1212;
+}
+
 
 .game-menu.start{
-    background-color: limegreen;
+    background-image: linear-gradient(to top, #58c015, #6dcb14, #80d613, #94e012, #a8eb12);
 }
 
 .game-menu.gameover{
-    background-color: crimson;
+    background-image: linear-gradient(to top, #000000, #37131d, #6c172d, #a31638, #dc143c);
 }
 
 .countdown-display{
@@ -74,4 +102,25 @@ body{
     left: 37%;
     font-family: 'Press Start 2P', cursive;
     /* transition: opacity 0.2s ease-in-out; */
+}
+
+@keyframes scale-in{
+    0%{
+        transform: scale(0);
+        opacity: 0;
+    }
+
+    60%{
+        transform: scale(1.2);
+        opacity: 1;
+    }
+
+    100%{
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.scale-in-anim {
+    animation: scale-in 0.5s ease-in-out;
 }

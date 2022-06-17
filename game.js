@@ -129,15 +129,19 @@ var showStartMenu = function() {
     if ($("#start-menu").hasClass("hidden")) {
         $("#start-menu").removeClass("hidden");
     }
+
+    $("#start-menu").addClass("scale-in-anim");
 }
 
 var hideStartMenu = function() {
     $("#start-menu").addClass("hidden");
+    $("#start-menu").removeClass("scale-in-anim");
 }
 
 var showGameOverMenu = function() {
     if ($("#game-over-menu").hasClass("hidden")) {
         $("#game-over-menu").removeClass("hidden");
+        $("#game-over-menu").addClass("scale-in-anim");
         $("#game-over-score").text(`Ваш счёт: ${score}`);
         sfxGameOver.play();
     }
