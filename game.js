@@ -575,3 +575,20 @@ $("#back-to-menu-button").click(function() {
     setSnakeToInitialState(snake);
     setGameToInitialState();
 });
+
+// управление
+$("#control-up").click(function() {
+    snake.setDirection('up');
+})
+
+$("#control-down").click(function() {
+    snake.setDirection('down');
+})
+
+$("#control-left").click(function() {
+    snake.setDirection('left');
+})
+
+$("#control-right").click(function() {
+    snake.setDirection('right');
+})
