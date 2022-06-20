@@ -41,21 +41,36 @@ body{
 
 .game-menu{
     font-family: 'Raleway';
-    position: fixed;
-    width: 25vw;
+    position: absolute;
     text-align: center;
-    top: 25%;
-    left: 37%;
     transition: opacity 0.1s ease-in-out;
     font-family: 'Press Start 2P', cursive;
     padding: 2% 0% 2% 0%;
+
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 50rem;
+    height: 34rem;
+    margin-left: -25rem;
+    /* -1/2 width */
+    margin-top: -17rem;
+    /* -1/2 height */
+}
+
+.game-menu-inner{
+    margin-top: 10%;
 }
 
 .game-menu.start h1{
     pointer-events: none;
     color: white;
-    font-size: 2.5rem;
+    font-size: 4.5rem;
     text-shadow: 4px 5px 0px #000000, -4px -3px 0px #15990C;
+}
+
+.game-menu.start h2 {
+    font-size: 2rem;
 }
 
 .game-menu.start p{
@@ -65,11 +80,12 @@ body{
 .game-menu.gameover h1{
     pointer-events: none;
     color: white;
-    font-size: 2.5rem;
+    font-size: 4.5rem;
     text-shadow: 4px 5px 0px #000000, -4px -3px 0px #ff0000;
 }
 
 .game-menu.gameover h2{
+    font-size: 2rem;
     color: white;
 }
 
