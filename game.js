@@ -7,7 +7,7 @@ var width = canvas.width;
 var height = canvas.height;
 
 // вычисляем ширину и высоту в ячейках
-var blockSize = 20;
+var blockSize = 40;
 var widthInBlocks = width / blockSize;
 var heightInBlocks = height / blockSize;
 

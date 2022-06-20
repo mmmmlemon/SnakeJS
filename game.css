@@ -51,10 +51,10 @@ body{
     left: 50%;
     top: 50%;
     width: 50rem;
-    height: 34rem;
+    height: 36rem;
     margin-left: -25rem;
     /* -1/2 width */
-    margin-top: -17rem;
+    margin-top: -18rem;
     /* -1/2 height */
 }
 
@@ -67,6 +67,10 @@ body{
     color: white;
     font-size: 4.5rem;
     text-shadow: 4px 5px 0px #000000, -4px -3px 0px #15990C;
+}
+
+.game-menu.start h6{
+    font-size: 1.2rem;
 }
 
 .game-menu.start h2 {
@@ -91,6 +95,7 @@ body{
 
 .game-menu.gameover p{
     color: white;
+    font-size: 2rem;
 }
 
 .game-menu.gameover h2:hover{
@@ -178,4 +183,63 @@ body{
 
 .scale-in-anim {
     animation: scale-in 0.5s ease-in-out;
+}
+
+.d-pad-wrapper{
+    background-color: grey;
+    width: 30rem;
+    height: 30rem;
+    position: fixed;
+    margin: 5rem auto;
+    bottom: 1rem;
+    left: 50%;
+    margin-left: -25%;
+}
+
+.d-pad-wrapper .up{
+    font-size: 4rem;
+    background-color: black;
+    color: white;
+    width: 100%;
+    height: 30%;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.d-pad-wrapper .left{
+    font-size: 4rem;
+    background-color: black;
+    color: white;
+    width: 50%;
+    height: 30%;
+    position: absolute;
+    left: -5rem;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+
+.d-pad-wrapper .right{
+    font-size: 4rem;
+    background-color: black;
+    color: white;
+    width: 50%;
+    height: 30%;
+    position: absolute;
+    right: -5rem;
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.d-pad-wrapper .down{
+    font-size: 4rem;
+    background-color: black;
+    color: white;
+    width: 100%;
+    height: 30%;
+    bottom: 0;
+    position: absolute;
+    bottom: 0;
+    margin: 0 auto;
+    text-align: center;
 }
