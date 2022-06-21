@@ -2,8 +2,10 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <meta name="viewport" 
+      content="user-scalable=0">
         <title>Змейка!</title>
-        <link href="game.css" rel="stylesheet">
+        <link href="/snake/game.css" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
@@ -46,19 +48,19 @@
         <!-- d-pad -->
         <div class="d-pad-wrapper">
             
-            <div class="up">
+            <div id="control-up" class="up noselect">
                 UP
             </div>
 
-            <div class="left">
+            <div id="control-left" class="left noselect">
                 LEFT
             </div>
 
-            <div class="right">
+            <div id="control-right" class="right noselect">
                 RIGHT
             </div>
 
-            <div class="down">
+            <div id="control-down" class="down noselect">
                 DOWN
             </div>
        
@@ -73,6 +75,6 @@
 
         <h1 id="score" class="score hidden">Счёт: </h1>
         <script src="https://code.jquery.com/jquery-2.1.0.js"></script>
-        <script src="game.js"></script>
+        <script src="/snake/game.js"></script>
     </body>
 </html>

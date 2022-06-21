@@ -13,9 +13,9 @@ var heightInBlocks = height / blockSize;
 
 var score = 0;
 
-var sfxCountdown = new Audio('./sfx/countdown.mp3');
-var sfxGo = new Audio('./sfx/go.mp3');
-var sfxGameOver = new Audio('./sfx/gameover.mp3');
+var sfxCountdown = new Audio('/snake/sfx/countdown.mp3');
+var sfxGo = new Audio('/snake/sfx/go.mp3');
+var sfxGameOver = new Audio('/snake/sfx/gameover.mp3');
 
 var snakeColors = {
     'r': 65,
@@ -25,7 +25,7 @@ var snakeColors = {
 
 // скорость движения змейки
 // таймаут в мс с которым будет обновляться элемент canvas
-var canvasRerenderTimeout = 120;
+var canvasRerenderTimeout = 280;
 
 valueOfPercentFromNumber = function(number, percent) {
     return Math.floor((number / 100) * percent);
@@ -93,7 +93,7 @@ var setSnakeToInitialState = function(snake) {
 }
 
 var setGameToInitialState = function() {
-    canvasRerenderTimeout = 120;
+    canvasRerenderTimeout = 280;
     score = 0;
 }
 
@@ -358,17 +358,17 @@ var Apple = function() {
     };
     this.appleType = this.appleTypes.default;
     this.sfx = {
-        appleTimeout: new Audio('./sfx/appleTimeout.mp3'),
-        appleMove: new Audio('./sfx/appleMove.mp3'),
-        score1: new Audio('./sfx/score1.mp3'),
-        score2: new Audio('./sfx/score2.mp3'),
-        score3: new Audio('./sfx/score3.mp3'),
-        score4: new Audio('./sfx/score4.mp3'),
-        score5: new Audio('./sfx/score5.mp3'),
-        size: new Audio('./sfx/size.mp3'),
-        speed: new Audio('./sfx/speed.mp3'),
-        score: new Audio('./sfx/score.mp3'),
-        black: new Audio('./sfx/black.mp3')
+        appleTimeout: new Audio('/snake/sfx/appleTimeout.mp3'),
+        appleMove: new Audio('/snake/sfx/appleMove.mp3'),
+        score1: new Audio('/snake/sfx/score1.mp3'),
+        score2: new Audio('/snake/sfx/score2.mp3'),
+        score3: new Audio('/snake/sfx/score3.mp3'),
+        score4: new Audio('/snake/sfx/score4.mp3'),
+        score5: new Audio('/snake/sfx/score5.mp3'),
+        size: new Audio('/snake/sfx/size.mp3'),
+        speed: new Audio('/snake/sfx/speed.mp3'),
+        score: new Audio('/snake/sfx/score.mp3'),
+        black: new Audio('/snake/sfx/black.mp3')
     }
 };
 
@@ -577,18 +577,22 @@ $("#back-to-menu-button").click(function() {
 });
 
 // управление
-$("#control-up").click(function() {
+$("#control-up").bind('touchstart', function() {
+    // alert('up')
     snake.setDirection('up');
 })
 
-$("#control-down").click(function() {
+$("#control-down").bind('touchstart', function() {
+    // alert('down')
     snake.setDirection('down');
 })
 
-$("#control-left").click(function() {
+$("#control-left").bind('touchstart', function() {
+    // alert('left')
     snake.setDirection('left');
 })
 
-$("#control-right").click(function() {
+$("#control-right").bind('touchstart', function() {
+    // alert('right')
     snake.setDirection('right');
 })
