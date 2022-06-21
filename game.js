@@ -580,19 +580,40 @@ $("#back-to-menu-button").click(function() {
 $("#control-up").bind('touchstart', function() {
     // alert('up')
     snake.setDirection('up');
-})
+    $("#control-up").addClass("pressed")
+});
+
+$("#control-up").bind('touchend', function(){
+    $("#control-up").removeClass("pressed")
+});
 
 $("#control-down").bind('touchstart', function() {
     // alert('down')
     snake.setDirection('down');
-})
+    $("#control-down").addClass("pressed")
+});
+
+$("#control-down").bind('touchend', function(){
+    $("#control-down").removeClass("pressed")
+});
+
 
 $("#control-left").bind('touchstart', function() {
     // alert('left')
     snake.setDirection('left');
-})
+    $("#control-left").addClass("pressed")
+});
+
+$("#control-left").bind('touchend', function(){
+    $("#control-left").removeClass("pressed")
+});
 
 $("#control-right").bind('touchstart', function() {
     // alert('right')
     snake.setDirection('right');
-})
+    $("#control-right").addClass("pressed")
+});
+
+$("#control-right").bind('touchend', function(){
+    $("#control-right").removeClass("pressed")
+});

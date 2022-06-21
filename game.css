@@ -198,7 +198,7 @@ body{
 }
 
 .d-pad-wrapper{
-    background-color: grey;
+    background-image: linear-gradient(to top, #7a7a7a, #858585, #909090, #9c9b9b, #a8a6a6);
     width: 30rem;
     height: 30rem;
     position: fixed;
@@ -206,28 +206,54 @@ body{
     bottom: 1rem;
     left: 50%;
     margin-left: -25%;
+    border-radius: 50%;
+
 }
 
 .d-pad-wrapper .up{
     font-size: 4rem;
     background-color: black;
     color: white;
-    width: 100%;
-    height: 30%;
+    width: 40%;
+    height: 40%;
     margin: 0 auto;
     text-align: center;
+    background-image: linear-gradient(to bottom, #292929, #313131, #3a3a3a, #434343, #4c4c4c);
+    border-top-left-radius: 10%;
+    border-top-right-radius: 10%;
+    border-bottom-left-radius: 50%;
+    border-bottom-right-radius: 50%;
+    transition: all 0.1s ease-in-out;
+
 }
+
+.d-pad-wrapper .up.pressed, .d-pad-wrapper .down.pressed, .d-pad-wrapper .left.pressed, .d-pad-wrapper .right.pressed{
+    background-image: radial-gradient(circle, #000000, #000000, #000000, #000000, #000000);
+    color: rgb(68, 68, 68);
+    -webkit-box-shadow: 0px 8px 12px 9px rgba(90, 90, 90, 1);
+    -moz-box-shadow: 0px 8px 12px 9px rgba(90, 90, 90, 1);
+    box-shadow: 0px 8px 12px 9px rgba(90, 90, 90, 1);
+}
+
+
 
 .d-pad-wrapper .left{
     font-size: 4rem;
     background-color: black;
     color: white;
-    width: 50%;
-    height: 30%;
+    width: 40%;
+    height: 40%;
     position: absolute;
-    left: -5rem;
-    margin-top: 1rem;
+    top: 50%;
+    margin-top: -20%;
+    margin-top: -6rem;
+    left: 0;
     text-align: center;
+    background-image: linear-gradient(to right, #292929, #313131, #3a3a3a, #434343, #4c4c4c);
+    border-top-left-radius: 10%;
+    border-bottom-left-radius: 10%;
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
 }
 
 
@@ -235,23 +261,41 @@ body{
     font-size: 4rem;
     background-color: black;
     color: white;
-    width: 50%;
-    height: 30%;
+    width: 40%;
+    height: 40%;
     position: absolute;
-    right: -5rem;
-    margin-top: 1rem;
+    top: 50%;
+    margin-top: -20%;
+    margin-top: -6rem;
+    right: 0;
     text-align: center;
+    background-image: linear-gradient(to left, #292929, #313131, #3a3a3a, #434343, #4c4c4c);
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+    border-top-right-radius: 10%;
+    border-bottom-right-radius: 10%;
 }
 
 .d-pad-wrapper .down{
     font-size: 4rem;
     background-color: black;
     color: white;
-    width: 100%;
-    height: 30%;
+    width: 40%;
+    height: 40%;
     bottom: 0;
     position: absolute;
     bottom: 0;
-    margin: 0 auto;
+    left: 50%;
+    margin-left: -20%;
     text-align: center;
+    background-image: linear-gradient(to top, #292929, #313131, #3a3a3a, #434343, #4c4c4c);
+    border-bottom-left-radius: 10%;
+    border-bottom-right-radius: 10%;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    transition: all 0.1s ease-in-out;
+}
+
+.pressed{
+    background-color: black !important;
 }
