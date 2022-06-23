@@ -28,7 +28,8 @@ body{
     display: table;
     margin: 0 auto;
     margin-top: 5vh;
-    font-family: 'Raleway', sans-serif;;
+    font-family: 'Press Start 2P', sans-serif;
+    font-size: 1.5rem;
     transition: opacity 0.5s ease-in-out;
 }
 
@@ -207,7 +208,7 @@ body{
     left: 50%;
     margin-left: -25%;
     border-radius: 50%;
-
+    display: block;
 }
 
 .d-pad-wrapper .up{
@@ -298,4 +299,55 @@ body{
 
 .pressed{
     background-color: black !important;
+}
+
+.score-messages{
+    color: crimson;
+    font-family: 'Press Start 2P';
+    text-align: center;
+    opacity: 0;
+    width: 100%;
+    position: absolute;
+}
+
+@keyframes scoreMessage{
+    0%{
+        opacity: 0;
+        transform: scale(0.8);
+        transform: translateY(0);
+    }
+
+    50%{
+        opacity: 1;
+        transform: scale(1.2);
+        transform: translateY(-1rem);  
+    }
+
+    100%{
+        opacity: 0;
+        transform: scale(1.2);
+        transform: translateY(-2rem);
+    }
+}
+
+.score-message-anim{
+    animation: scoreMessage 0.5s ease-in-out;
+}
+
+@keyframes bounceIn{
+    0%{
+        transform: scale(0);
+    }
+
+    50%{
+        transform: scale(1.5);
+    }
+
+    100%{
+        transform: scale(1);
+    }
+}
+
+.bouncein-anim{
+    animation: bounceIn 0.5s ease-in-out;
 }

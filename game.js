@@ -27,6 +27,41 @@ var snakeColors = {
 // таймаут в мс с которым будет обновляться элемент canvas
 var canvasRerenderTimeout = 280;
 
+// ф-ция взята со stackoverflow
+// https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
+window.mobileAndTabletCheck = function() {
+    let check = false;
+    (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) check = true;})(navigator.userAgent||navigator.vendor||window.opera);
+    return check;
+};
+
+showDPad = function(){
+    $("#d-pad-wrapper").css("display", "block");
+}
+
+hideDPad = function(){
+    $("#d-pad-wrapper").css("display", "none");
+}
+
+scoreMessage = function(appleType){
+    if(appleType.typeName == 'default'){
+        $("#score-message").css("color", "Crimson");
+        $("#score-message").text("+1");
+    } else if(appleType.typeName == 'size'){
+        $("#score-message").css("color", "LimeGreen");
+        $("#score-message").text("+1 -ДЛИНА");
+    } else if(appleType.typeName == 'speed'){
+        $("#score-message").css("color", "Gold");
+        $("#score-message").text("+1 -СКОРОСТЬ");
+    } else if(appleType.typeName == 'score'){
+        $("#score-message").css("color", "Indigo");
+        $("#score-message").text("СЧЁТ +15%");
+    } else if(appleType.typeName == 'black'){
+        $("#score-message").css("color", "Black");
+        $("#score-message").text("СЧЁТ +15% -ДЛИНА -СКОРОСТЬ");
+    } 
+}
+
 valueOfPercentFromNumber = function(number, percent) {
     return Math.floor((number / 100) * percent);
 }
@@ -65,6 +100,10 @@ var drawScore = function() {
 
 var increaseScore = function() {
     score++;
+  $("#score-message").addClass("score-message-anim");
+  $("#score-message").on('animationend', ()=>{
+    $("#score-message").removeClass("score-message-anim");
+  })
 }
 
 var changeSnakeColor = function() {
@@ -110,19 +149,34 @@ var countdownBeforeStart = function(countdown) {
 
         if (countdown > 0) {
             $("#countdown").text(countdown);
+            $("#countdown").addClass("bouncein-anim");
+            $("#countdown").on('animationend', ()=>{
+                $("#countdown").removeClass("bouncein-anim");
+            });
             sfxCountdown.play();
         } else if (countdown === 0) {
             $("#countdown").text("GO!");
+            $("#countdown").addClass("bouncein-anim");
+            $("#countdown").on('animationend', ()=>{
+                $("#countdown").removeClass("bouncein-anim");
+            });
             sfxGo.play();
         }
 
         if (countdown === -1) {
-            hideCountdown();
-            gamePaused = false;
-            clearInterval(countdownInterval);
-            showScore();
+           clearInterval(countdownInterval);
+           startGame();
         }
     }, 1000);
+}
+
+var startGame = function(){
+    hideCountdown();
+    gamePaused = false;
+    showScore();
+    if(mobileAndTabletCheck() === true){
+        showDPad();
+    }
 }
 
 var showStartMenu = function() {
@@ -144,6 +198,7 @@ var showGameOverMenu = function() {
         $("#game-over-menu").addClass("scale-in-anim");
         $("#game-over-score").text(`Ваш счёт: ${score}`);
         sfxGameOver.play();
+        hideDPad();
     }
 }
 
@@ -259,10 +314,11 @@ Snake.prototype.move = function() {
     this.segments.unshift(newHead);
 
     if (newHead.equal(apple.position)) {
+        increaseScore();
+        scoreMessage(apple.appleType);
         apple.activateBonus(this);
         apple.playScoreSfx();
         apple.move();
-        increaseScore();
         changeSnakeColor();
         decreaseCanvasRerenderTimeoutByPercent(7);
     } else {
@@ -346,7 +402,7 @@ var Apple = function() {
             color: 'Indigo',
             typeName: 'score',
             chanceDivider: 16,
-            scoreToGenerate: 25,
+            scoreToGenerate: 15,
         },
         black: {
             color: 'Black',
@@ -440,10 +496,11 @@ Apple.prototype.activateBonus = function(snake) {
 }
 
 Apple.prototype.activateSpeedBonus = function() {
-    canvasRerenderTimeout = canvasRerenderTimeout + valueOfPercentFromNumber(canvasRerenderTimeout, 30);
+    canvasRerenderTimeout = canvasRerenderTimeout + valueOfPercentFromNumber(canvasRerenderTimeout, 40);
 }
 
 Apple.prototype.activateSizeBonus = function(snake) {
+    // сокращаем змейку на 1/3 от длины
     var numOfSegments = Math.floor(snake.getSegmentsLength() / 3);
     snake.removeSegments(numOfSegments);
 }
@@ -453,6 +510,8 @@ Apple.prototype.activateScoreBonus = function() {
 }
 
 Apple.prototype.activateBlackBonus = function(snake) {
+
+    score += valueOfPercentFromNumber(score, 15);
 
     decreaseCanvasRerenderTimeoutByPercent(20);
 
@@ -501,7 +560,7 @@ Apple.prototype.cycle = function() {
         this.move();
         apple.sfx.appleMove.play();
     } else if (this.timer === 15 || this.timer === 10 || this.timer === 5) {
-        this.draw('Black')
+        this.draw('#faf2c8')
         apple.sfx.appleTimeout.play();
     } else {
         this.draw(this.appleType.color);
@@ -596,7 +655,6 @@ $("#control-down").bind('touchstart', function() {
 $("#control-down").bind('touchend', function(){
     $("#control-down").removeClass("pressed")
 });
-
 
 $("#control-left").bind('touchstart', function() {
     // alert('left')
