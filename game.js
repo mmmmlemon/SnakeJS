@@ -93,7 +93,7 @@ var getRandomBorderColor = function(){
         'Teal'
     ];
 
-    var randomInt = getRandomIntInRange(0, listOfPrettyColors.length-1);
+    var randomInt = getRandomIntInRange(0, listOfPrettyColors.length - 1);
     return listOfPrettyColors[randomInt];
 };
 
@@ -356,7 +356,7 @@ Snake.prototype.move = function() {
         apple.playScoreSfx();
         apple.move();
         changeSnakeColor();
-        decreaseCanvasRerenderTimeoutByPercent(7);
+        decreaseCanvasRerenderTimeoutByPercent(5);
     } else {
         this.segments.pop();
     }
@@ -416,6 +416,7 @@ Snake.prototype.removeSegments = function(numOfSegments) {
 // Задаем конструктор Apple (яблоко)
 var Apple = function() {
     this.position = new Block(20, 20);
+    this.previousPosition = undefined;
     this.timer = 500;
     this.appleTypes = {
         default: {
@@ -532,12 +533,12 @@ Apple.prototype.activateBonus = function(snake) {
 }
 
 Apple.prototype.activateSpeedBonus = function() {
-    canvasRerenderTimeout = canvasRerenderTimeout + valueOfPercentFromNumber(canvasRerenderTimeout, 40);
+    canvasRerenderTimeout = canvasRerenderTimeout + valueOfPercentFromNumber(canvasRerenderTimeout, 60);
 }
 
 Apple.prototype.activateSizeBonus = function(snake) {
     // сокращаем змейку на 1/3 от длины
-    var numOfSegments = Math.floor(snake.getSegmentsLength() / 3);
+    var numOfSegments = Math.floor(snake.getSegmentsLength() / 2);
     snake.removeSegments(numOfSegments);
 }
 
@@ -549,7 +550,7 @@ Apple.prototype.activateBlackBonus = function(snake) {
 
     score += valueOfPercentFromNumber(score, 15);
 
-    decreaseCanvasRerenderTimeoutByPercent(20);
+    decreaseCanvasRerenderTimeoutByPercent(40);
 
     var currentGameSpeed = canvasRerenderTimeout;
     var originalGameSpeed = 120;
@@ -578,6 +579,9 @@ Apple.prototype.activateBlackBonus = function(snake) {
 // Перемещаем яблоко в новую случайную позицию (и меняем его тип случайным образом)
 Apple.prototype.move = function() {
     this.clearTimer();
+
+    this.previousPosition = this.position;
+
     var randomCol = Math.floor(Math.random() * (widthInBlocks - 2)) + 1;
     var randomRow = Math.floor(Math.random() * (heightInBlocks - 2)) + 1;
 
@@ -590,7 +594,17 @@ Apple.prototype.move = function() {
     this.switchAppleTypeRandomly();
 };
 
-Apple.prototype.cycle = function() {
+Apple.prototype.cycle = function(snake) {
+
+    for(let snakeSegment of snake.segments){
+        if(snakeSegment.col === apple.position.col && snakeSegment.row === apple.position.row){
+            this.move();
+        }
+    }
+
+    if(this.position === this.previousPosition){
+        this.move();
+    }
 
     if (this.timer === 0) {
         this.move();
@@ -618,7 +632,7 @@ var rerenderCanvasCallback = function() {
         snake.move();
         snake.draw();
         apple.decreaseTimer();
-        apple.cycle();
+        apple.cycle(snake);
         drawCanvasBorder();
     }
 
