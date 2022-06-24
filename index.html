@@ -15,6 +15,9 @@
     </head>
     <body>
 
+        <img id="source" src="/snake/img/crimson.png"
+        width="300" height="227" style="display:none">
+
         <!-- главное меню -->
         <div id="start-menu" class="game-menu start scale-in-anim">
             <div class="game-menu-inner">
@@ -23,10 +26,8 @@
                 <h6>v2</h6>
                 <hr>
                 <h2 id="start-game-button" class="menu-button">Начать игру</h2>
-                <!-- <h2 id="start-game-button" class="menu-button">Выбрать сложность</h2>
-                <h2 id="start-game-button" class="menu-button">Правила игры</h2> -->
-                <hr>
-                <p>Управление: стрелки клавиатуры</p>
+                <h2 id="game-rules-button" class="menu-button">Правила игры</h2>
+                <h2 id="start-game-button" class="menu-button"><a href="https://github.com/mmmmlemon/SnakeJS">GitHub</a></h2>
             </div>
      
         </div>
@@ -41,6 +42,25 @@
                 <h2 id="restart-game-button" class="menu-button">Начать заново</h2>
                 <h2 id="back-to-menu-button" class="menu-button">В главное меню</h2>
             </div>
+        </div>
+
+        <!-- правила игры -->
+        <div id="rules-menu" class="game-menu start hidden">
+            <div>
+                <h3>Правила игры</h3>
+                <hr>
+                <p>Управляйте змейкой и собирайте <b style="color: crimson;">яблочки</b> чтобы заработать очки. Каждое яблочко увеличивает длину змейки и скорость её движения. Если змейка ударится о рамку или о саму себя - игра закончится.</p>
+                <p>После того как вы наберёте 15 очков, кроме обычных яблочек будут появляться яблочки с бонусами.</p>
+                <p><b style="color: Gold;">Желтое</b> яблочко - уменьшает скорость змейки.</p>
+                <p><b style="color: DarkGreen;">Зелёное</b> яблочко - уменьшает длину змейки.</p>
+                <p><b style="color: Indigo;">Фиолетовое</b> яблочко - начисляет 15% очков от текущего счёта</p>
+                <p><b>Черноё</b> яблочко - все вышеперечисленные бонусы вместе, появляется реже всего</p>
+                <hr>
+                <p>Управление: стрелки клавиатуры, либо кнопки на экране (на мобильных устройствах)</p>
+                <hr>
+                <h2 id="back-to-menu-button-rules" class="menu-button">В главное меню</h2>
+            </div>
+        
         </div>
 
         <canvas id="canvas" width="800" height="800" class="canvas"></canvas>

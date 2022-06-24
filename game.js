@@ -253,6 +253,19 @@ var hideGameOverMenu = function() {
     $("#game-over-menu").removeClass("scale-in-anim");
 }
 
+var showRulesMenu = function(){
+    if ($("#rules-menu").hasClass("hidden")) {
+        $("#rules-menu").removeClass("hidden");
+    }
+
+    $("#rules-menu").addClass("scale-in-anim");
+}
+
+var hideRulesMenu = function(){
+    $("#rules-menu").addClass("hidden");
+    $("#rules-menu").removeClass("scale-in-anim");
+}
+
 var showCountdown = function() {
     $("#countdown-display").removeClass("hidden");
     $("#countdown").text("");
@@ -673,8 +686,20 @@ $("#restart-game-button").click(function() {
 $("#back-to-menu-button").click(function() {
     showStartMenu();
     hideGameOverMenu();
+    hideRulesMenu();
     setSnakeToInitialState(snake);
     setGameToInitialState();
+});
+
+$("#game-rules-button").click(function() {
+    hideStartMenu();
+    showRulesMenu();
+})
+
+// кнопка "В главное меню"
+$("#back-to-menu-button-rules").click(function() {
+    showStartMenu();
+    hideRulesMenu();
 });
 
 // управление
